@@ -12,11 +12,11 @@ import (
 )
 
 func DBConnection() (*gorm.DB, error) {
-	USER := "postgres"
-	PASS := "root" 
-	HOST := "localhost"
-	PORT := "1111"
-	DBNAME := "go-app-db"
+	USER := os.Getenv("USER")
+	PASS := os.Getenv("PASS")
+	HOST := os.Getenv("HOST")
+	PORT := os.Getenv("PORT")
+	DBNAME := os.Getenv("DBNAME")
 
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
