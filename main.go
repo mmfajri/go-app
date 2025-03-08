@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func Main() {
+func main() {
 	fmt.Print("PROGRAM RUN")
 
 	db,err := models.DBConnection()
