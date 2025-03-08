@@ -69,5 +69,5 @@ func SetupRoutes(db *gorm.DB) {
 		userProtectedRoutes.DELETE("/:user", middlewares.Authorize("report", "write", enforcer), userController.DeleteUser)
 	}
 
-	httpRouter.Run()
+	httpRouter.Run(":"+"8080")
 }
