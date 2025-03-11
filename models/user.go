@@ -8,6 +8,9 @@ type User struct {
 	Email		string `json:"email" gorm:"unique"`
 	Role		string `json:"role" gorm:"-"`
 	Password	string `json:"password"`	
+	IsDeleted 	bool   `json:"is_deleted"`	
+
+	Reports		[]Report `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
 func (User) TableName() string {

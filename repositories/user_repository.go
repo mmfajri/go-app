@@ -19,6 +19,7 @@ type UserRepository interface {
 	GetAllUser() ([]models.User, error)
 	UpdateUser(models.User) (models.User, error) 
 	DeleteUser(models.User) (models.User, error)
+	SoftDeleteUser(uint) (int, error)
 	Migrate() error
 }
 
@@ -63,3 +64,9 @@ func (u userRepository) DeleteUser(user models.User) (models.User,error) {
 	}
 	return user, u.DB.Delete(&user).Error
 }
+
+func (u userRepository) SoftDeleteUser(id uint) (int, error) {
+	result := u.DB.Model(&models.User{}).Where("id = ?", id).Update("is_deleted = ? ", true)
+	return int(result.RowsAffected), result.Error 
+}
+
