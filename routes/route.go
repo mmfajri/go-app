@@ -69,5 +69,14 @@ func SetupRoutes(db *gorm.DB) {
 		userProtectedRoutes.DELETE("/:user", middlewares.Authorize("report", "write", enforcer), userController.DeleteUser)
 	}
 
+	roleProtectedRoutes := apiRoutes.Group("/roles", middlewares.AuthorizeJWT()) 
+	{
+		roleProtectedRoutes.GET("/", middlewares.Authorize("role", "read", enforcer) )
+		roleProtectedRoutes.GET("/:role", middlewares.Authorize("role", "read", enforcer) )
+		roleProtectedRoutes.PUT("/:role", middlewares.Authorize("role", "write", enforcer) )
+		roleProtectedRoutes.POST("/add", middlewares.Authorize("role", "write", enforcer) )
+		roleProtectedRoutes.DELETE("/:user", middlewares.Authorize("role", "write", enforcer) )
+	}
+
 	httpRouter.Run(":"+"8080")
 }

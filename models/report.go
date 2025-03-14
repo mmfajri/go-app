@@ -7,6 +7,7 @@ import (
 type Report struct {
 	gorm.Model
 	Name 			string 	`json:"name"`
+	Content			string 	`json:"content"`
 	IsDeleted 		bool 	`json:"is_deleted"`
 
 	User			User	`gorm:"foreignKey:UserID;constraint:OnUpdate:Cascade,OnDelete:SET NULL"`
