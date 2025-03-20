@@ -34,30 +34,43 @@ func SetupRoutes(db *gorm.DB) {
 	//add policy for req
 	//one time only
 	//[Line 17-26]
-	if hasPolicy,_ := enforcer.HasPolicy("doctor", "report", "read"); !hasPolicy {
+	if hasPolicy, _ := enforcer.HasPolicy("doctor", "report", "read"); !hasPolicy {
 		enforcer.AddPolicy("doctor", "report", "read")
-	}	
-	if hasPolicy,_ := enforcer.HasPolicy("doctor", "report", "write"); !hasPolicy {
+	}
+	if hasPolicy, _ := enforcer.HasPolicy("doctor", "report", "write"); !hasPolicy {
 		enforcer.AddPolicy("doctor", "report", "write")
-	}	
-	if hasPolicy,_ := enforcer.HasPolicy("patient", "report", "read"); !hasPolicy {
+	}
+	if hasPolicy, _ := enforcer.HasPolicy("patient", "report", "read"); !hasPolicy {
 		enforcer.AddPolicy("patient", "report", "read")
-	}	
+	}
 
 	//Registry All Repositories
 	userRepository := repositories.NewUserRepository(db)
 	if err := userRepository.Migrate(); err != nil {
 		log.Fatal("User Migrate err", err)
 	}
+	reportRepository := repositories.NewReportRepository(db)
+	if err := reportRepository.Migrate(); err != nil {
+		log.Fatal("Report Migrate err", err)
+	}
 
 	//Registry All Controllers
-	userController := controllers.NewUserController(userRepository)	
+	userController := controllers.NewUserController(userRepository)
+	reportController := controllers.NewReportController(reportRepository)
 
 	//Setup Route
 	apiRoutes := httpRouter.Group("/api")
 	{
 		apiRoutes.POST("/registry", userController.AddUser(enforcer))
 		apiRoutes.POST("/signin", userController.SignInUser)
+	}
+
+	reportProtectedRoutes := apiRoutes.Group("/report", middlewares.AuthorizeJWT())
+	{
+		reportProtectedRoutes.GET("/", reportController.Get)
+		reportProtectedRoutes.POST("/add", reportController.Add)
+		reportProtectedRoutes.DELETE("/delete", reportController.Delete)
+		reportProtectedRoutes.PUT("/update", reportController.Update)
 	}
 
 	userProtectedRoutes := apiRoutes.Group("/users", middlewares.AuthorizeJWT())
@@ -69,14 +82,14 @@ func SetupRoutes(db *gorm.DB) {
 		userProtectedRoutes.DELETE("/:user", middlewares.Authorize("report", "write", enforcer), userController.DeleteUser)
 	}
 
-	roleProtectedRoutes := apiRoutes.Group("/roles", middlewares.AuthorizeJWT()) 
+	roleProtectedRoutes := apiRoutes.Group("/roles", middlewares.AuthorizeJWT())
 	{
-		roleProtectedRoutes.GET("/", middlewares.Authorize("role", "read", enforcer) )
-		roleProtectedRoutes.GET("/:role", middlewares.Authorize("role", "read", enforcer) )
-		roleProtectedRoutes.PUT("/:role", middlewares.Authorize("role", "write", enforcer) )
-		roleProtectedRoutes.POST("/add", middlewares.Authorize("role", "write", enforcer) )
-		roleProtectedRoutes.DELETE("/:user", middlewares.Authorize("role", "write", enforcer) )
+		roleProtectedRoutes.GET("/", middlewares.Authorize("role", "read", enforcer))
+		roleProtectedRoutes.GET("/:role", middlewares.Authorize("role", "read", enforcer))
+		roleProtectedRoutes.PUT("/:role", middlewares.Authorize("role", "write", enforcer))
+		roleProtectedRoutes.POST("/add", middlewares.Authorize("role", "write", enforcer))
+		roleProtectedRoutes.DELETE("/:user", middlewares.Authorize("role", "write", enforcer))
 	}
 
-	httpRouter.Run(":"+"8080")
+	httpRouter.Run(":" + "8080")
 }
