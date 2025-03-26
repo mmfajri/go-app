@@ -10,12 +10,20 @@ import (
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/gin-gonic/gin"
+	"github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
 )
 
 func SetupRoutes(db *gorm.DB) {
 	//[Line 3]
 	httpRouter := gin.Default()
+
+	// Serve the Swagger documentation
+	httpRouter.Static("/swagger", "./docs") // Serve static Swagger files
+
+	url := ginSwagger.URL("http://localhost:8080/swagger/swagger.json")
+	httpRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
 	//Initialize casbin adapter
 	//[Line 6]
@@ -92,4 +100,5 @@ func SetupRoutes(db *gorm.DB) {
 	}
 
 	httpRouter.Run(":" + "8080")
+
 }
