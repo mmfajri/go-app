@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-app/models"
 	"go-app/repositories"
+	"go-app/requests"
 	"go-app/utils"
 	"net/http"
 	"strconv"
@@ -86,16 +87,23 @@ func (h userController) SignInUser(ctx *gin.Context) {
 // @tags Authentication
 // @accept json
 // @produce json
-// @param user body models.User true "User"
-// @success 200 {object} models.User
+// @param user body requests.UserRequest true "User"
+// @success 200 {object} requests.UserRequest
 // @router /registry [post]
 func (h userController) AddUser(enforcer *casbin.Enforcer) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var user models.User
-		if err := ctx.ShouldBindJSON(&user); err != nil {
+		var req requests.UserRequest
+		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
+
+		user.Name = req.Name
+		user.Password = req.Password
+		user.Email = req.Email
+		user.Role = req.Role
+		user.IsDeleted = false
 
 		utils.HashPassword(&user.Password)
 		user, err := h.userRepo.AddUser(user)

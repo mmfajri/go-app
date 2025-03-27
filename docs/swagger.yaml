@@ -1,5 +1,16 @@
 definitions:
-  models.User:
+  requests.UserRequest:
+    properties:
+      email:
+        type: string
+      is_deleted:
+        type: boolean
+      name:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
     type: object
   responses.BaseResponse:
     properties:
@@ -29,14 +40,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/requests.UserRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.User'
+            $ref: '#/definitions/requests.UserRequest'
       summary: create new user
       tags:
       - Authentication
