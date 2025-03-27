@@ -75,6 +75,12 @@ const docTemplate = `{
         "requests.UserRequest": {
             "type": "object",
             "properties": {
+                "created_time": {
+                    "type": "string"
+                },
+                "deleted_time": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },
@@ -88,6 +94,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "role": {
+                    "type": "string"
+                },
+                "updated_time": {
                     "type": "string"
                 }
             }

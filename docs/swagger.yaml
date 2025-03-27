@@ -1,6 +1,10 @@
 definitions:
   requests.UserRequest:
     properties:
+      created_time:
+        type: string
+      deleted_time:
+        type: string
       email:
         type: string
       is_deleted:
@@ -10,6 +14,8 @@ definitions:
       password:
         type: string
       role:
+        type: string
+      updated_time:
         type: string
     type: object
   responses.BaseResponse:
