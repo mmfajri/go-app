@@ -1,4 +1,6 @@
 definitions:
+  models.User:
+    type: object
   responses.BaseResponse:
     properties:
       Data: {}
@@ -16,6 +18,28 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
+  /registry:
+    post:
+      consumes:
+      - application/json
+      description: create new user
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: create new user
+      tags:
+      - Authentication
   /report/get_all:
     get:
       description: return all report from database

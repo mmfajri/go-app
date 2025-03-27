@@ -19,6 +19,40 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/registry": {
+            "post": {
+                "description": "create new user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "create new user",
+                "parameters": [
+                    {
+                        "description": "User",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                }
+            }
+        },
         "/report/get_all": {
             "get": {
                 "description": "return all report from database",
@@ -38,6 +72,9 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.User": {
+            "type": "object"
+        },
         "responses.BaseResponse": {
             "type": "object",
             "properties": {

@@ -80,6 +80,15 @@ func (h userController) SignInUser(ctx *gin.Context) {
 	return
 }
 
+// Create create new user
+// @summary create new user
+// @description create new user
+// @tags Authentication
+// @accept json
+// @produce json
+// @param user body models.User true "User"
+// @success 200 {object} models.User
+// @router /registry [post]
 func (h userController) AddUser(enforcer *casbin.Enforcer) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var user models.User
