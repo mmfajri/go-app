@@ -1,4 +1,35 @@
+definitions:
+  responses.BaseResponse:
+    properties:
+      Data: {}
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
 info:
   contact: {}
-paths: {}
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /report/get_all:
+    get:
+      description: return all report from database
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.BaseResponse'
+      summary: get all reports
+      tags:
+      - Reports
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

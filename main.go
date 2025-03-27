@@ -17,7 +17,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	db,err := models.DBConnection()
+	db, err := models.DBConnection()
 	if err != nil {
 		log.Print("System Error", err)
 	}

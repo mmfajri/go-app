@@ -3,27 +3,42 @@ package routes
 import (
 	"fmt"
 	"go-app/controllers"
+	"go-app/docs"
 	"go-app/middlewares"
 	"go-app/repositories"
 	"log"
 
+	_ "go-app/docs"
+
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/files"
+	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
 )
 
+/*
+Run this command
+swag init -g routes/route.go (<~/ {folder_name_that_has_root} / {route_file_name}.go>)
+*/
+// @title           Swagger Example API
+// @version         1.0
+// @description     This is a sample server celler server.
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func SetupRoutes(db *gorm.DB) {
+	docs.SwaggerInfo.BasePath = "/api"
+	docs.SwaggerInfo.Host = "localhost:8080"
 	//[Line 3]
 	httpRouter := gin.Default()
 
-	// Serve the Swagger documentation
-	httpRouter.Static("/swagger", "./docs") // Serve static Swagger files
-
-	url := ginSwagger.URL("http://localhost:8080/swagger/swagger.json")
-	httpRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+	httpRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	//Initialize casbin adapter
 	//[Line 6]
@@ -71,6 +86,8 @@ func SetupRoutes(db *gorm.DB) {
 	{
 		apiRoutes.POST("/registry", userController.AddUser(enforcer))
 		apiRoutes.POST("/signin", userController.SignInUser)
+		//Testing API
+		apiRoutes.GET("/report/get_all", reportController.GetAll)
 	}
 
 	reportProtectedRoutes := apiRoutes.Group("/report", middlewares.AuthorizeJWT())
@@ -100,5 +117,4 @@ func SetupRoutes(db *gorm.DB) {
 	}
 
 	httpRouter.Run(":" + "8080")
-
 }

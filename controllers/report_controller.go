@@ -89,7 +89,6 @@ func (h *reportController) Update(ctx *gin.Context) {
 
 	data.Name = req.Name
 	data.Content = req.Content
-
 	affectedRows, err := h.reportRepo.UpdateReport(data)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -105,6 +104,12 @@ func (h *reportController) Update(ctx *gin.Context) {
 
 }
 
+// GetAllReport
+// @summary get all reports
+// @description return all report from database
+// @tags Reports
+// @success	200	{object} responses.BaseResponse
+// @router	/report/get_all	[get]
 func (h *reportController) GetAll(ctx *gin.Context) {
 	datas, err := h.reportRepo.GetReport()
 	if err != nil {

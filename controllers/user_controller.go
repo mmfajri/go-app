@@ -26,7 +26,7 @@ type UserController interface {
 }
 
 func NewUserController(repo repositories.UserRepository) UserController {
-	return userController {
+	return userController{
 		userRepo: repo,
 	}
 }
@@ -75,13 +75,13 @@ func (h userController) SignInUser(ctx *gin.Context) {
 		token := utils.GenerateToken(dbUser.ID)
 		ctx.JSON(http.StatusOK, gin.H{"msg": "Successfully SignIn", "token": token})
 		return
-	} 
+	}
 	ctx.JSON(http.StatusInternalServerError, gin.H{"msg": "Password not matched"})
 	return
 }
 
 func (h userController) AddUser(enforcer *casbin.Enforcer) gin.HandlerFunc {
-	return func(ctx *gin.Context){
+	return func(ctx *gin.Context) {
 		var user models.User
 		if err := ctx.ShouldBindJSON(&user); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -138,4 +138,3 @@ func (h userController) DeleteUser(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, user)
 }
-
