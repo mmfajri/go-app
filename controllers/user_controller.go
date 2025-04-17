@@ -59,11 +59,25 @@ func (h userController) GetUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, user)
 }
 
+// SignIn sign_in user
+// @summary sign_in user
+// @description sign_in user
+// @tags Authentication
+// @accept json
+// @produce json
+// @param user body requests.SignIn true "User"
+// @success 200 {object} requests.UserRequest
+// @router /sign-in [post]
 func (h userController) SignInUser(ctx *gin.Context) {
+	var req requests.SignIn
 	var user models.User
-	if err := ctx.ShouldBindBodyWithJSON(&user); err != nil {
+
+	if err := ctx.ShouldBindBodyWithJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
+
+	user.Email = req.Email
+	user.Password = req.Password
 
 	dbUser, err := h.userRepo.GetByEmail(user.Email)
 	if err != nil {

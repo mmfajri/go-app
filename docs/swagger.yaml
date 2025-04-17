@@ -1,4 +1,11 @@
 definitions:
+  requests.SignIn:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
   requests.UserRequest:
     properties:
       created_time:
@@ -68,6 +75,28 @@ paths:
       summary: get all reports
       tags:
       - Reports
+  /sign-in:
+    post:
+      consumes:
+      - application/json
+      description: sign_in user
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SignIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/requests.UserRequest'
+      summary: sign_in user
+      tags:
+      - Authentication
 securityDefinitions:
   BearerAuth:
     in: header

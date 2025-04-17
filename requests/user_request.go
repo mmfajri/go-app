@@ -7,3 +7,8 @@ type UserRequest struct {
 	Password string `json:"password"`
 	BaseRequest
 }
+
+type SignIn struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}

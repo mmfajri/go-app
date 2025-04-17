@@ -85,7 +85,7 @@ func SetupRoutes(db *gorm.DB) {
 	apiRoutes := httpRouter.Group("/api")
 	{
 		apiRoutes.POST("/registry", userController.AddUser(enforcer))
-		apiRoutes.POST("/signin", userController.SignInUser)
+		apiRoutes.POST("/sign-in", userController.SignInUser)
 		//Testing API
 		apiRoutes.GET("/report/get_all", reportController.GetAll)
 	}
